@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="The full record of your saved Binance P2P trading days, filterable and exportable.">
+<title>Daily History · Binance P2P MMK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app-shell">
+
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">₿</span>
+        <span class="brand-text">
+          <strong>Binance P2P MMK</strong>
+          <small>Daily Profit Calculator</small>
+        </span>
+      </a>
+
+      <nav class="tabs" aria-label="Main">
+        <a href="input.html">New Entry</a>
+        <a href="index.html">Dashboard</a>
+        <a href="history.html" class="active" aria-current="page">Daily History</a>
+        <a href="import.html">Import Data</a>
+      </nav>
+
+      <div id="rateTicker" class="rate-ticker" title="Binance P2P USDT / MMK">
+        <span class="rate-label">USDT / MMK</span>
+        <span class="rate-value rate-wait">…</span>
+      </div>
+
+      <button type="button" id="rateEditBtn" class="icon-btn" aria-label="Enter rate by hand" title="Enter rate by hand">
+        <span class="rate-edit-icon" aria-hidden="true">✎</span>
+      </button>
+
+      <button type="button" id="themeBtn" class="icon-btn" aria-label="Switch theme" title="Switch theme">
+        <span class="theme-icon" aria-hidden="true"></span>
+      </button>
+
+    </div>
+  </header>
+
+
+  <main class="container">
+
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Daily History</h2>
+          <p id="historySubtitle">Every saved day, newest first.</p>
+        </div>
+        <div class="button-row small">
+          <a class="btn ghost" href="input.html">New Entry</a>
+          <button type="button" id="exportBtn" class="btn ghost">Export CSV</button>
+          <button type="button" id="clearHistoryBtn" class="btn danger-ghost">Clear History</button>
+        </div>
+      </div>
+
+      <div id="message" class="message hidden" role="status" aria-live="polite"></div>
+
+      <!-- ===== FILTERS ===== -->
+      <div class="filter-bar">
+        <div class="filter-field">
+          <label for="searchInput">Search by date</label>
+          <input type="text" id="searchInput" placeholder="2026-09 or 12 Sep">
+        </div>
+
+        <div class="filter-field">
+          <label for="monthInput">Month</label>
+          <select id="monthInput">
+            <option value="">All months</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="resultInput">Result</label>
+          <select id="resultInput">
+            <option value="">All days</option>
+            <option value="profit">Profit only</option>
+            <option value="loss">Loss only</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="sortInput">Order</label>
+          <select id="sortInput">
+            <option value="date-desc">Newest first</option>
+            <option value="date-asc">Oldest first</option>
+            <option value="profit-desc">Highest profit</option>
+            <option value="profit-asc">Lowest profit</option>
+          </select>
+        </div>
+
+        <button type="button" id="resetFiltersBtn" class="btn ghost">Reset</button>
+      </div>
+
+
+      <!-- ===== TOTALS FOR THE CURRENT VIEW ===== -->
+      <div class="summary-grid view-totals">
+        <div class="stat-card">
+          <span>Days Shown</span>
+          <strong id="viewDays">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>MMK Paid</span>
+          <strong id="viewMmk">0.00 MMK</strong>
+        </div>
+        <div class="stat-card">
+          <span>Total Net Profit</span>
+          <strong id="viewProfit">0.00 MMK</strong>
+        </div>
+        <div class="stat-card">
+          <span>Average per Day</span>
+          <strong id="viewAverage">0.00 MMK</strong>
+        </div>
+      </div>
+
+
+      <!-- ===== TABLE ===== -->
+      <div class="table-wrapper">
+        <table class="wide-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th class="num">Buying Rate</th>
+              <th class="num">MMK Paid</th>
+              <th class="num">Total USDT</th>
+              <th class="num">Fee</th>
+              <th class="num">Receive USDT</th>
+              <th class="num">P2P Rate</th>
+              <th class="num">Daily Rate</th>
+              <th class="num">Spread</th>
+              <th class="num">Net Profit</th>
+              <th class="num">Action</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+
+      <div class="table-foot">
+        <button type="button" id="moreBtn" class="btn ghost hidden">
+          Show more
+        </button>
+        <span id="tableFootNote" class="muted"></span>
+      </div>
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>Binance P2P MMK Profit Calculator</p>
+    <p class="muted">All data stays in this browser. Nothing is uploaded to a server.</p>
+  </footer>
+
+</div>
+
+<script src="shared.js"></script>
+<script src="rate.js"></script>
+<script src="history.js"></script>
+
+</body>
+</html>

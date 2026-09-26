@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Import Binance P2P Excel, CSV or screenshot data and group it by day and order type.">
+<title>Import Binance P2P Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app-shell">
+
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">₿</span>
+        <span class="brand-text">
+          <strong>Binance P2P MMK</strong>
+          <small>Import &amp; Daily Data</small>
+        </span>
+      </a>
+
+      <nav class="tabs" aria-label="Main">
+        <a href="input.html">New Entry</a>
+        <a href="index.html">Dashboard</a>
+        <a href="history.html">Daily History</a>
+        <a href="import.html" class="active" aria-current="page">Import Data</a>
+      </nav>
+
+      <div id="rateTicker" class="rate-ticker" title="Binance P2P USDT / MMK">
+        <span class="rate-label">USDT / MMK</span>
+        <span class="rate-value rate-wait">…</span>
+      </div>
+
+      <button type="button" id="rateEditBtn" class="icon-btn" aria-label="Enter rate by hand" title="Enter rate by hand">
+        <span class="rate-edit-icon" aria-hidden="true">✎</span>
+      </button>
+
+      <button type="button" id="themeBtn" class="icon-btn" aria-label="Switch theme" title="Switch theme">
+        <span class="theme-icon" aria-hidden="true"></span>
+      </button>
+
+    </div>
+  </header>
+
+
+  <main class="container">
+
+    <!-- ===== SOURCES ===== -->
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Import Binance Data</h2>
+          <p>Bring in an Excel export, a CSV, or a screenshot of your P2P history. Transactions get grouped by date and order type.</p>
+        </div>
+      </div>
+
+      <div class="import-grid">
+
+        <div class="import-box">
+          <div class="import-icon" aria-hidden="true">📊</div>
+          <h3>Excel</h3>
+          <p>Binance .xlsx and .xls exports. Every sheet is read.</p>
+          <button type="button" id="excelBtn" class="btn primary">Choose Excel</button>
+          <input type="file" id="excelInput" accept=".xlsx,.xls" hidden>
+        </div>
+
+        <div class="import-box">
+          <div class="import-icon" aria-hidden="true">📄</div>
+          <h3>CSV</h3>
+          <p>Binance .csv exports, comma or semicolon separated.</p>
+          <button type="button" id="csvBtn" class="btn primary">Choose CSV</button>
+          <input type="file" id="csvInput" accept=".csv,.txt" hidden>
+        </div>
+
+        <div class="import-box">
+          <div class="import-icon" aria-hidden="true">🖼️</div>
+          <h3>Image</h3>
+          <p>Read one order from a screenshot, on-device OCR.</p>
+          <button type="button" id="imageBtn" class="btn primary">Choose Image</button>
+          <input type="file" id="imageInput" accept="image/*" hidden>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ===== OCR ===== -->
+    <section id="ocrSection" class="card hidden">
+      <div class="section-title">
+        <div>
+          <h2>Image Reader</h2>
+          <p id="ocrStatus">Preparing OCR…</p>
+        </div>
+      </div>
+
+      <div class="progress">
+        <div id="ocrProgress" class="progress-bar"></div>
+      </div>
+
+      <div id="ocrResult"></div>
+
+      <div class="button-row">
+        <button type="button" id="useOcrBtn" class="btn success hidden">Use OCR Data</button>
+        <button type="button" id="resetOcrBtn" class="btn ghost">Reset</button>
+      </div>
+    </section>
+
+
+    <!-- ===== MESSAGE ===== -->
+    <div id="importMessage" class="message hidden" role="status" aria-live="polite"></div>
+
+
+    <!-- ===== GROUPED DATA ===== -->
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Daily Imported Data</h2>
+          <p id="importSummary">Import a Binance file to begin.</p>
+        </div>
+        <div class="button-row small">
+          <button type="button" id="exportImportBtn" class="btn ghost">Export CSV</button>
+          <button type="button" id="clearImportBtn" class="btn danger-ghost">Clear Table</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th class="num">Total USDT</th>
+              <th class="num">Fee USDT</th>
+              <th class="num">Receive USDT</th>
+              <th class="num">Average Price</th>
+              <th class="num">Orders</th>
+              <th class="num">Use</th>
+            </tr>
+          </thead>
+
+          <tbody id="importBody">
+            <tr>
+              <td colspan="8" class="empty">
+                No imported data yet — choose a file above.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- ===== NOTES ===== -->
+    <section class="card">
+      <h2>How Grouping Works</h2>
+      <div class="steps">
+        <div><b>1</b><span>Import your Binance P2P transaction file.</span></div>
+        <div><b>2</b><span>Rows are filtered to completed USDT orders only.</span></div>
+        <div><b>3</b><span>Maker Fee and Taker Fee are added together when both exist.</span></div>
+        <div><b>4</b><span>Receive USDT = Total USDT − Fee.</span></div>
+        <div><b>5</b><span>Average Price is quantity-weighted across the day.</span></div>
+        <div><b>6</b><span>Use Day sends it to the calculator, where you enter the Daily Market Rate.</span></div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>Binance P2P MMK Profit Calculator</p>
+    <p class="muted">Files are read in your browser. Nothing is uploaded to a server.</p>
+  </footer>
+
+</div>
+
+<!-- Excel / CSV reader -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+<!-- OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<script src="shared.js"></script>
+<script src="rate.js"></script>
+<script src="import.js"></script>
+
+</body>
+</html>

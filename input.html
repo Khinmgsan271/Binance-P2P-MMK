@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Enter what you paid for USDT and see your Binance P2P profit in MMK.">
+<title>New Entry · Binance P2P MMK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app-shell">
+
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">₿</span>
+        <span class="brand-text">
+          <strong>Binance P2P MMK</strong>
+          <small>Daily Profit Calculator</small>
+        </span>
+      </a>
+
+      <nav class="tabs" aria-label="Main">
+        <a href="input.html" class="active" aria-current="page">New Entry</a>
+        <a href="index.html">Dashboard</a>
+        <a href="history.html">Daily History</a>
+        <a href="import.html">Import Data</a>
+      </nav>
+
+      <div id="rateTicker" class="rate-ticker" title="Binance P2P USDT / MMK">
+        <span class="rate-label">USDT / MMK</span>
+        <span class="rate-value rate-wait">…</span>
+      </div>
+
+      <button type="button" id="rateEditBtn" class="icon-btn" aria-label="Enter rate by hand" title="Enter rate by hand">
+        <span class="rate-edit-icon" aria-hidden="true">✎</span>
+      </button>
+
+      <button type="button" id="themeBtn" class="icon-btn" aria-label="Switch theme" title="Switch theme">
+        <span class="theme-icon" aria-hidden="true"></span>
+      </button>
+
+    </div>
+  </header>
+
+
+  <main class="container">
+
+    <!-- ===== ENTRY FORM ===== -->
+    <section class="card" id="entryCard">
+      <div class="section-title">
+        <div>
+          <h2>New Entry</h2>
+          <p>Enter what you spent to buy the USDT and the two P2P rates. Everything updates as you type.</p>
+        </div>
+        <span class="pill" id="dayPill">Today</span>
+      </div>
+
+      <div id="message" class="message hidden" role="status" aria-live="polite"></div>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date">
+        </div>
+
+        <div class="form-group span-2">
+          <label for="totalMmk">Total MMK Paid to Buy USDT <span>MMK</span></label>
+          <input type="number" id="totalMmk" placeholder="1,500,000" step="1" min="0" inputmode="decimal">
+        </div>
+
+        <div class="form-group">
+          <label for="totalQuantity">Total Quantity <span>USDT</span></label>
+          <input type="number" id="totalQuantity" placeholder="340.90" step="0.000001" min="0" inputmode="decimal">
+        </div>
+
+        <div class="form-group">
+          <label for="fee">Fee <span>USDT</span></label>
+          <input type="number" id="fee" placeholder="0.34" step="0.000001" min="0" inputmode="decimal">
+        </div>
+
+        <div class="form-group">
+          <label for="p2pRate">
+            Your P2P Selling Rate <span>MMK / USDT</span>
+            <em class="auto-tag" id="rateTag">auto</em>
+          </label>
+          <input type="number" id="p2pRate" placeholder="4400" step="0.01" min="0" inputmode="decimal">
+        </div>
+
+        <div class="form-group">
+          <label for="dailyRate">Daily Binance P2P Market Rate <span>MMK / USDT</span></label>
+          <input type="number" id="dailyRate" placeholder="4420" step="0.01" min="0" inputmode="decimal">
+        </div>
+
+      </div>
+
+      <div class="buy-rate-bar">
+        <div class="buy-rate-item">
+          <span>Your P2P Selling Rate</span>
+          <strong id="p2pRateOut">— MMK / USDT</strong>
+        </div>
+        <div class="buy-rate-item">
+          <span>Your Buying Rate</span>
+          <strong id="buyRateOut">— MMK / USDT</strong>
+        </div>
+        <p class="buy-rate-note">
+          The selling rate is worked out from the MMK you paid and the quantity bought.
+          Clear the MMK field and you can type a rate directly instead.
+        </p>
+      </div>
+
+      <div class="button-row">
+        <button type="button" id="saveBtn" class="btn primary">Save Day</button>
+        <button type="button" id="saveNewBtn" class="btn success">Save &amp; New</button>
+        <button type="button" id="clearBtn" class="btn ghost">Clear</button>
+      </div>
+    </section>
+
+
+    <!-- ===== LIVE PREVIEW ===== -->
+    <section class="hero-card" id="heroCard">
+      <div class="hero-main">
+        <span class="hero-label">Net Profit</span>
+        <strong class="hero-value" id="netProfit">0.00 <em>MMK</em></strong>
+        <span class="hero-note" id="heroNote">Waiting for your numbers.</span>
+      </div>
+      <div class="hero-side">
+        <div class="hero-mini">
+          <span>Receive Quantity</span>
+          <strong id="receiveQuantity">0.000000 <em>USDT</em></strong>
+        </div>
+        <div class="hero-mini">
+          <span>Profit / USDT</span>
+          <strong id="profitPerUsdt">0.00 <em>MMK</em></strong>
+        </div>
+        <div class="hero-mini">
+          <span>Margin</span>
+          <strong id="marginPercent">0.00%</strong>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="results-grid">
+      <div class="metric-card">
+        <span>Gross Profit</span>
+        <strong id="grossProfit">0.00 MMK</strong>
+        <small>Receive × Spread</small>
+      </div>
+      <div class="metric-card">
+        <span>Fee Loss</span>
+        <strong id="feeLoss">0.00 MMK</strong>
+        <small>Fee × Spread</small>
+      </div>
+      <div class="metric-card">
+        <span>Spread</span>
+        <strong id="spreadValue">0.00 MMK</strong>
+        <small>Daily − P2P</small>
+      </div>
+      <div class="metric-card">
+        <span>P2P Value</span>
+        <strong id="p2pValue">0.00 MMK</strong>
+        <small>Receive × P2P Rate</small>
+      </div>
+      <div class="metric-card">
+        <span>Market Value</span>
+        <strong id="marketValue">0.00 MMK</strong>
+        <small>Receive × Daily Rate</small>
+      </div>
+    </section>
+
+
+    <!-- ===== RECENT ===== -->
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Recently Saved</h2>
+          <p>Your last few days. Open Daily History for the full record.</p>
+        </div>
+        <div class="button-row small">
+          <a class="btn ghost" href="history.html">Full History</a>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th class="num">Buying Rate</th>
+              <th class="num">Receive USDT</th>
+              <th class="num">Spread</th>
+              <th class="num">Net Profit</th>
+              <th class="num">Action</th>
+            </tr>
+          </thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>Binance P2P MMK Profit Calculator</p>
+    <p class="muted">All data stays in this browser. Nothing is uploaded to a server.</p>
+  </footer>
+
+</div>
+
+<script src="shared.js"></script>
+<script src="rate.js"></script>
+<script src="input.js"></script>
+
+</body>
+</html>

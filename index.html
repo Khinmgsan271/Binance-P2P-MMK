@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Overview of your Binance P2P USDT trading: profit graph, key totals and recent links.">
+<title>Dashboard · Binance P2P MMK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">₿</span>
+        <span class="brand-text">
+          <strong>Binance P2P MMK</strong>
+          <small>Daily Profit Calculator</small>
+        </span>
+      </a>
+
+      <nav class="tabs" aria-label="Main">
+        <a href="input.html">New Entry</a>
+        <a href="index.html" class="active" aria-current="page">Dashboard</a>
+        <a href="history.html">Daily History</a>
+        <a href="import.html">Import Data</a>
+      </nav>
+
+      <div id="rateTicker" class="rate-ticker" title="Binance P2P USDT / MMK">
+        <span class="rate-label">USDT / MMK</span>
+        <span class="rate-value rate-wait">…</span>
+      </div>
+
+      <button type="button" id="rateEditBtn" class="icon-btn" aria-label="Enter rate by hand" title="Enter rate by hand">
+        <span class="rate-edit-icon" aria-hidden="true">✎</span>
+      </button>
+
+      <button type="button" id="themeBtn" class="icon-btn" aria-label="Switch theme" title="Switch theme">
+        <span class="theme-icon" aria-hidden="true"></span>
+      </button>
+
+    </div>
+  </header>
+
+
+  <main class="container">
+
+    <!-- ===== TOTALS ===== -->
+    <section class="summary-grid large">
+      <div class="stat-card">
+        <span>Total Trading Days</span>
+        <strong id="totalDays">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Total MMK Paid</span>
+        <strong id="totalMmkPaid">0.00 MMK</strong>
+      </div>
+      <div class="stat-card">
+        <span>Total USDT</span>
+        <strong id="totalUsdt">0.000000 USDT</strong>
+      </div>
+      <div class="stat-card accent-card">
+        <span>Total Net Profit</span>
+        <strong id="totalNetProfit">0.00 MMK</strong>
+      </div>
+      <div class="stat-card">
+        <span>Average Daily Rate</span>
+        <strong id="averageDailyRate">0.00 MMK</strong>
+      </div>
+    </section>
+
+
+    <!-- ===== GRAPH ===== -->
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Profit Graph</h2>
+          <p id="chartSubtitle">Save a few days and your net profit will appear here.</p>
+        </div>
+      </div>
+
+      <div class="chart-toolbar">
+        <div class="seg" role="group" aria-label="Chart range">
+          <button type="button" data-range="7" class="seg-btn">7 days</button>
+          <button type="button" data-range="30" class="seg-btn active">30 days</button>
+          <button type="button" data-range="0" class="seg-btn">All</button>
+        </div>
+      </div>
+
+      <div id="chartWrap" class="chart-wrap">
+        <div id="chartEmpty" class="chart-empty">
+          <strong>No saved days yet</strong>
+          <span>Add one on the New Entry page and the graph fills in automatically.</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===== QUICK ACTIONS ===== -->
+    <section class="quick-grid">
+      <a class="quick-card" href="input.html">
+        <span class="quick-icon" aria-hidden="true">＋</span>
+        <strong>New Entry</strong>
+        <small>Record what you paid and see the profit.</small>
+      </a>
+      <a class="quick-card" href="history.html">
+        <span class="quick-icon" aria-hidden="true">☰</span>
+        <strong>Daily History</strong>
+        <small>Filter, sort and export every saved day.</small>
+      </a>
+      <a class="quick-card" href="import.html">
+        <span class="quick-icon" aria-hidden="true">⬆</span>
+        <strong>Import Data</strong>
+        <small>Read Binance Excel, CSV or a screenshot.</small>
+      </a>
+    </section>
+
+
+    <!-- ===== LAST SAVED DAY ===== -->
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Last Saved Day</h2>
+          <p id="lastDayNote">Nothing saved yet.</p>
+        </div>
+        <div class="button-row small">
+          <a class="btn ghost" href="history.html">See all</a>
+        </div>
+      </div>
+
+      <div class="last-day">
+        <div class="last-day-item">
+          <span>Date</span>
+          <strong id="lastDate">—</strong>
+        </div>
+        <div class="last-day-item">
+          <span>Receive Quantity</span>
+          <strong id="lastReceive">—</strong>
+        </div>
+        <div class="last-day-item">
+          <span>Buying Rate</span>
+          <strong id="lastBuyingRate">—</strong>
+        </div>
+        <div class="last-day-item">
+          <span>Spread</span>
+          <strong id="lastSpread">—</strong>
+        </div>
+        <div class="last-day-item">
+          <span>Net Profit</span>
+          <strong id="lastProfit">—</strong>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>Binance P2P MMK Profit Calculator</p>
+    <p class="muted">All data stays in this browser. Nothing is uploaded to a server.</p>
+  </footer>
+
+</div>
+
+<script src="shared.js"></script>
+<script src="rate.js"></script>
+<script src="dashboard.js"></script>
+
+</body>
+</html>
